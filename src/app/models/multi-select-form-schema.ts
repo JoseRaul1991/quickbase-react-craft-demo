@@ -1,12 +1,7 @@
 import { object, string, boolean, array, InferType } from "yup";
 import { CHOICES_CHAR_LIMIT, CHOICES_LIMIT } from "../constants/choices";
-
-export enum Order {
-    Ascending = "asc",
-    Descending = "desc",
-}
-
-export const filterFnEmptyChoices = (choice: string) => choice.trim() !== "";
+import { Order } from "./order";
+import { filterNonEmptyValues } from "../utils/filter-non-empty-values";
 
 export const validationSchema = object().shape({
     id: string(),
@@ -18,25 +13,14 @@ export const validationSchema = object().shape({
     }),
     choices: array().of(string().required())
         .test("choices", `choices must be less than or equal to ${CHOICES_LIMIT}`, (choices) => {
-            return (choices || [])?.filter(filterFnEmptyChoices).length <= CHOICES_LIMIT;
+            return (choices || [])?.filter(filterNonEmptyValues).length <= CHOICES_LIMIT;
         })
         .test("choices", `Choices have a character limit of ${CHOICES_CHAR_LIMIT}`, (choices) => {
-            return !choices?.filter(filterFnEmptyChoices).some((choice) => choice.trim().length > CHOICES_CHAR_LIMIT);
+            return !choices?.filter(filterNonEmptyValues).some((choice) => choice.trim().length > CHOICES_CHAR_LIMIT);
         })
         .test("choices", "Choices must be unique", (choices) => { 
-            const nonEmptyChoices = choices?.filter(filterFnEmptyChoices);
+            const nonEmptyChoices = choices?.filter(filterNonEmptyValues);
             return new Set(nonEmptyChoices).size === nonEmptyChoices?.length;
         }),
     order: string().oneOf([...Object.values(Order)]),
 });
-
-export type MultiselectFormValues = InferType<typeof validationSchema>;
-
-export const INITIAL_VALUES: MultiselectFormValues = {
-    id: "",
-    label: "",
-    isRequired: false,
-    defaultValue: "",
-    choices: [],
-    order: Order.Ascending,
-  };

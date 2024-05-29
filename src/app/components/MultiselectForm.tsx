@@ -1,82 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import TextareaWithLimit from "./TextareaWithLimit";
 import "./MultiselectForm.css";
-import {
-  INITIAL_VALUES,
-  MultiselectFormValues,
-  filterFnEmptyChoices,
-  validationSchema,
-} from "../models/MultiselectForm";
 import { CHOICES_CHAR_LIMIT, CHOICES_LIMIT } from "../constants/choices";
-import { useMultiselect } from "../hooks/useMultiselect";
+import { useMultiselectForm } from "../hooks/useMultiselectForm";
+import { Order } from "../models/order";
 
 const MultiselectForm: React.FC = () => {
-  const { multiselect, updateMultiselect } = useMultiselect("mock-id");
-  const [formData, setFormData] =
-    useState<MultiselectFormValues>(INITIAL_VALUES);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const {
+    formData,
+    errors,
+    handleChange,
+    handleChoicesOnChange,
+    handleSubmit,
+    currentChoicesLength,
+  } = useMultiselectForm();
 
-  const currentLength =
-    formData.choices?.filter(filterFnEmptyChoices).length || 0;
-
-  useEffect(() => {
-    if (multiselect) {
-      setFormData(multiselect);
-    }
-  }, [multiselect]);
-
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type, checked } = event.target as HTMLInputElement;
-    const newValue = type === "checkbox" ? checked : value;
-    setFormData({
-      ...formData,
-      [name]: newValue,
-    });
-  };
-
-  const handleChoicesOnChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setFormData({
-      ...formData,
-      choices: event.target.value.split("\n"),
-    });
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    try {
-      await validationSchema.validate(formData, { abortEarly: false });
-
-      setErrors({});
-
-      const readyFormData = {
-        ...formData,
-        choices: Array.from(
-          new Set(
-            [...(formData.choices ?? []), formData.defaultValue ?? ""]?.map(
-              (choice) => choice.trim()
-            )
-          )
-        ),
-      };
-      updateMultiselect(readyFormData);
-    } catch (error: any) {
-      setErrors(
-        error.inner.reduce(
-          (acc: Record<string, string>, err: any) => ({
-            ...acc,
-            [err.path]: err.message,
-          }),
-          {}
-        )
-      );
-    }
-  };
   return (
     <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit}>
       <fieldset>
@@ -135,7 +74,7 @@ const MultiselectForm: React.FC = () => {
         />
         <span className="absolute top-4 right-4 text-xs flex flex-row-reverse text-slate-400 font-semibold">
           {" "}
-          {currentLength}/{CHOICES_LIMIT}
+          {currentChoicesLength}/{CHOICES_LIMIT}
         </span>
       </fieldset>
       <fieldset className="-mt-4">
@@ -157,8 +96,11 @@ const MultiselectForm: React.FC = () => {
             value={formData.order}
             onChange={handleChange}
           >
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
+            {Object.entries(Order).map(([key, value]) => (
+              <option key={key} value={value}>
+                {key}
+              </option>
+            ))}
           </select>
         </div>
       </fieldset>

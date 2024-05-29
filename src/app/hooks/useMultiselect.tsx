@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { MultiselectFormValues } from "../models/MultiselectForm";
+import { MultiselectFormValues } from "../models/multi-select-form";
 import { getMultiselect, updateMultiselect } from "../services/api";
 
-export const useMultiselect = (id: string) => {
+export const useMultiselect = () => {
   const [multiselect, setMultiselect] = useState<MultiselectFormValues | null>(
     null
   );

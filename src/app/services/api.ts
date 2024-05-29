@@ -1,4 +1,5 @@
-import { MultiselectFormValues, Order } from "../models/MultiselectForm";
+import { MultiselectFormValues } from "../models/multi-select-form";
+import { Order } from "../models/order";
 
 export function getMultiselect(id: string): MultiselectFormValues {
   const response = {

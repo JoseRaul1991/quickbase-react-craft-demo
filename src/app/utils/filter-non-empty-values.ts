@@ -1,0 +1,1 @@
+export const filterNonEmptyValues = (value: string) => value.trim() !== "";
