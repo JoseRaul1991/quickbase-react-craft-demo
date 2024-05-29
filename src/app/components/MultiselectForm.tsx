@@ -64,7 +64,7 @@ const MultiselectForm: React.FC = () => {
           )}
         </div>
       </fieldset>
-      <fieldset className="h-40 relative">
+      <fieldset className="h-44 sm:h-40 relative">
         <label>Choices:</label>
         <TextareaWithLimit
           className="flex-1"
@@ -72,8 +72,7 @@ const MultiselectForm: React.FC = () => {
           value={formData.choices?.join("\n") || ""}
           onChange={handleChoicesOnChange}
         />
-        <span className="absolute top-4 right-4 text-xs flex flex-row-reverse text-slate-400 font-semibold">
-          {" "}
+        <span className="absolute top-8 sm:top-4 right-4 text-xs flex flex-row-reverse text-slate-400 font-semibold">
           {currentChoicesLength}/{CHOICES_LIMIT}
         </span>
       </fieldset>

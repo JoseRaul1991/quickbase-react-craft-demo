@@ -1,9 +1,9 @@
 fieldset {
-    @apply grid grid-cols-[120px_1fr] gap-1;
+    @apply flex flex-col sm:grid sm:grid-cols-[120px_1fr] gap-1;
 }
 
 fieldset label {
-    @apply overflow-hidden;
+    @apply overflow-hidden font-bold;
 }
 
 .field {
