@@ -1,0 +1,21 @@
+textarea {
+    -webkit-text-fill-color: transparent;
+    @apply absolute top-0 left-0 w-full h-40 px-6 py-2 bg-transparent caret-black z-10 overflow-auto resize-none border border-slate-400 rounded;
+}
+
+textarea::-webkit-scrollbar {
+    display: none;
+}
+
+#overlay {
+    @apply absolute top-0 left-0 w-full h-40 px-6 py-2 whitespace-pre-wrap break-words pointer-events-none  overflow-auto bg-white dark:bg-slate-600;
+}
+
+.element {
+    counter-increment: element-counter;
+}
+
+.element:before {
+    content: counter(element-counter) ". ";
+    @apply -ml-4;
+}
